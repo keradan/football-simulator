@@ -34,61 +34,17 @@
 					<button class="button">Next Week</button>
 				</div>
 			</div>
-			
-			
-			<?php
-				$matches = [
-					(object)[
-						'owner' => (object)[
-							'name' => 'Tottenham Hotspur',
-							'goals' => 3,
-						],
-						'guest' => (object)[
-							'name' => 'Manchester City',
-							'goals' => 2,
-						],
-					],
-					(object)[
-						'owner' => (object)[
-							'name' => 'Leicester City',
-							'goals' => 1,
-						],
-						'guest' => (object)[
-							'name' => 'Arsenal',
-							'goals' => 4,
-						],
-					],
-				];
-			?>
 
 			<div class="box">
 				<p class="title">Match results</p>
-				<hr>
-				<p class="subtitle">#5 Week Match Results</p>
-				<table class="table is-striped week-matches" data-week-id="<?= 5 ?>">
-					<tbody>
-						<?php foreach ($matches as $match_id => $match): ?>
-							<tr data-match-num="<?= $match_id ?>">
-								<th>
-									<?= $match->owner->name ?>
-								</th>
-								<th>
-									<input class="input" type="text" value="<?= $match->owner->goals ?>">
-								</th>
-								<th> - </th>
-								<th>
-									<input class="input" type="text" value="<?= $match->guest->goals ?>">
-								</th>
-								<th>
-									<?= $match->guest->name ?>
-								</th>
-								<th>
-									<button class="button is-success is-light">Save</button>
-								</th>
-							</tr>
-						<?php endforeach; ?>
-					</tbody>
-				</table>
+				<div class="league-week-list">
+				</div>
+			</div>
+
+			<div class="columns">
+				<div class="column">
+					<button class="button is-danger">Reset League</button>
+				</div>
 			</div>
 		</div>
 	</section>
