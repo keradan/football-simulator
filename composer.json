@@ -1,0 +1,11 @@
+{
+    "name": "daniilkerasidi/f-sim",
+    "type": "project",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Services\\": "services",
+            "App\\": "app"
+        }
+    }
+}
