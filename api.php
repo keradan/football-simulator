@@ -8,28 +8,7 @@ $response = (object)[];
 $response->success = true;
 $response->request = $request;
 
-$router = [
-	"GET" => [
-		'league_table' => function($request, $response){
-			$response->in_router = 'target - league_table';
-			return $response;
-		},
-		'weeks' => function($request, $response){
-			$response->in_router = 'target - weeks';
-			return $response;
-		},
-	],
-	"POST" => [
-		'weeks' => function($request, $response){
-			$response->in_router = 'target - weeks';
-			return $response;
-		},
-		'goals' => function($request, $response){
-			$response->in_router = 'target - goals';
-			return $response;
-		},
-	],
-];
+require 'router.php';
 
 try {
 

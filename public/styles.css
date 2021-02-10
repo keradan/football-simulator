@@ -1,0 +1,11 @@
+table.week-matches th {
+	border-bottom: none;
+}
+table.week-matches th input {
+	width: 33px;
+	height: 33px;
+	padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+}
+
