@@ -1,28 +1,27 @@
 <?php foreach ($league_weeks as $week): ?>
-	<hr>
-	<p class="subtitle">#<?= $week->id ?> Week Match Results</p>
-	<table class="table is-striped week-matches" data-week-id="<?= $week->id ?>">
+	<p class="subtitle" style="text-align: center;">#<?= $week->id ?> Week Match Results</p>
+	<table class="table is-striped week-matches" data-week-id="<?= $week->id ?>" style="width: 100%; max-width: 600px; margin: 0 auto;">
 		<tbody>
 			<?php foreach ($week->matches as $match_id => $match): ?>
 				<tr data-match-num="<?= $match_id ?>">
-					<th>
+					<th style="text-align: right; min-width: 230px;">
 						<?= $match->owner->name ?>
 					</th>
-					<th>
-						<input class="input" type="text" value="<?= $match->owner->goals ?>">
+					<th style="width: 30px">
+						<input class="input" type="text" value="<?= $match->owner->goals ?>" data-old-value="<?= $match->owner->goals ?>">
+						<button class="icon noselect">✓</button>
 					</th>
-					<th> - </th>
-					<th>
-						<input class="input" type="text" value="<?= $match->guest->goals ?>">
+					<th style="width: 10px"> - </th>
+					<th style="width: 30px">
+						<input class="input" type="text" value="<?= $match->guest->goals ?>" data-old-value="<?= $match->guest->goals ?>">
+						<button class="icon noselect">✓</button>
 					</th>
-					<th>
+					<th style="min-width: 230px;">
 						<?= $match->guest->name ?>
-					</th>
-					<th>
-						<button class="button is-success is-light">Save</button>
 					</th>
 				</tr>
 			<?php endforeach; ?>
 		</tbody>
 	</table>
+	<hr>
 <?php endforeach; ?>

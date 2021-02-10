@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 	<link rel="stylesheet" href="public/styles.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="shortcut icon" href="#">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<title>Football simulator</title>
@@ -12,14 +13,14 @@
 <body>
 	<section class="section">
 		<div class="container">
-			<h1 class="title">
+			<h1 class="title" style="text-align: center;">
 				Football simulator
 			</h1>
-			<p class="subtitle">
+			<p class="subtitle" style="text-align: center;">
 				League Table
 			</p>
 
-			<table class="table league-table">
+			<table class="table is-striped league-table" style="width: 100%;">
 				<thead>
 				</thead>
 				<tbody>
@@ -30,13 +31,15 @@
 				<div class="column">
 					<button class="button">Play All</button>
 				</div>
-				<div class="column">
+				<div class="column" style="text-align: right;">
 					<button class="button">Next Week</button>
 				</div>
 			</div>
-
-			<div class="box">
-				<p class="title">Match results</p>
+			
+			<br>
+			<br>
+			<p class="title" style="text-align: center;">Match results</p>
+			<div class="box" style="max-height: 220px; overflow-y: scroll;">
 				<div class="league-week-list">
 				</div>
 			</div>

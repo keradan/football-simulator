@@ -1,11 +1,52 @@
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.table tr.is-selected {
+	background: #be57bf;
+}
+
+table.league-table th[data-field="PDC"] {
+	color: red;
+}
+table.week-matches tr {
+	line-height: 45px;
+}
 table.week-matches th {
 	border-bottom: none;
+	position: relative;
+}
+table.week-matches th button.icon {
+	position: absolute;
+    bottom: -1px;
+    left: calc(50% - 8px);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    color: #009a00;
+    font-weight: 900;
+    font-size: 11px;
+    line-height: 0;
+    border: 1px solid #009a00;
+    background: #d9ffd4;
+    outline: none;
+    padding: 0;
 }
 table.week-matches th input {
 	width: 33px;
 	height: 33px;
 	padding-left: 5px;
     padding-right: 5px;
+    margin: 7px 0;
     text-align: center;
 }
 
+table.week-matches th input:not(.changed) + button.icon {
+	display: none;
+}
