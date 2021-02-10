@@ -1,9 +1,3 @@
-<?php
-
-
-
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 	<link as="style" rel="stylesheet" href="public/styles.css">
+	<link rel="shortcut icon" href="#">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<title>Football simulator</title>
 </head>
@@ -34,6 +29,7 @@
 					'D' => 'Drawn',
 					'L' => 'Lost',
 					'GD' => 'Goal difference',
+					'PDC' => 'Predictions of Championship',
 				];
 				$teams = [
 					(object)[
@@ -44,6 +40,7 @@
 						'D' => '12',
 						'L' => '3',
 						'GD' => '+25',
+						'PDC' => '56%',
 					],
 					(object)[
 						'title' => 'Arsenal',
@@ -53,6 +50,7 @@
 						'D' => '11',
 						'L' => '6',
 						'GD' => '+12',
+						'PDC' => '43%',
 					],
 					(object)[
 						'title' => 'Tottenham Hotspur',
@@ -62,6 +60,7 @@
 						'D' => '8',
 						'L' => '6',
 						'GD' => '+5',
+						'PDC' => '23%',
 					],
 					(object)[
 						'title' => 'Manchester City',
@@ -71,11 +70,10 @@
 						'D' => '9',
 						'L' => '8',
 						'GD' => '-3',
+						'PDC' => '5%',
 					],
 				];
 			?>
-
-
 
 			<table class="table">
 				<thead>
@@ -86,22 +84,86 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php $pos = 0; ?>
-					<?php foreach ($teams as $team): ?>
-						<?php $pos++; ?>
+					<?php foreach ($teams as $pos => $team): ?>
 						<tr>
-							<th><?= $pos ?></th>
-							<th><?= $team->title ?></th>
-							<th><?= $team->PTS ?></th>
-							<th><?= $team->PLD ?></th>
-							<th><?= $team->W ?></th>
-							<th><?= $team->D ?></th>
-							<th><?= $team->L ?></th>
-							<th><?= $team->GD ?></th>
+							<th data-field="POS"><?= $pos + 1 ?></th>
+							<th data-field="title"><?= $team->title ?></th>
+							<th data-field="PTS"><?= $team->PTS ?></th>
+							<th data-field="PLD"><?= $team->PLD ?></th>
+							<th data-field="W"><?= $team->W ?></th>
+							<th data-field="D"><?= $team->D ?></th>
+							<th data-field="L"><?= $team->L ?></th>
+							<th data-field="GD"><?= $team->GD ?></th>
+							<th data-field="PDC"><?= $team->PDC ?></th>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+			
+			<div class="columns">
+				<div class="column">
+					<button class="button">Play All</button>
+				</div>
+				<div class="column">
+					<button class="button">Next Week</button>
+				</div>
+			</div>
+			
+			
+			<?php
+				$matches = [
+					(object)[
+						'owner' => (object)[
+							'name' => 'Tottenham Hotspur',
+							'goals' => 3,
+						],
+						'guest' => (object)[
+							'name' => 'Manchester City',
+							'goals' => 2,
+						],
+					],
+					(object)[
+						'owner' => (object)[
+							'name' => 'Leicester City',
+							'goals' => 1,
+						],
+						'guest' => (object)[
+							'name' => 'Arsenal',
+							'goals' => 4,
+						],
+					],
+				];
+			?>
+
+			<div class="box">
+				<p class="title">Match results</p>
+				<hr>
+				<p class="subtitle">#5 Week Match Results</p>
+				<table class="table is-striped">
+					<tbody>
+						<?php foreach ($matches as $match): ?>
+							<tr>
+								<th style="border-bottom: none;">
+									<?= $match->owner->name ?>
+								</th>
+								<th style="border-bottom: none;">
+									<input class="input" type="text" style="width: 33px; height: 33px;" value="<?= $match->owner->goals ?>">
+								</th>
+								<th style="border-bottom: none;"> - </th>
+								<th style="border-bottom: none;">
+									<input class="input" type="text" style="width: 33px; height: 33px;" value="<?= $match->guest->goals ?>">
+								</th>
+								<th style="border-bottom: none;">
+									<?= $match->guest->name ?>
+								</th>
+								<th style="border-bottom: none;">
+									<button class="button is-success is-light">Save</button>
+								</th>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</section>
 	<script src="public/scripts.js"></script>
