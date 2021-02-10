@@ -1,17 +1,22 @@
 <?php
-$request = $_POST ? $_POST : $_GET;
-if(empty($request)) die(json_encode([
-	'success' => false,
-	'error' => 'request is empty',
-])); 
 
-$request = (object)$request;
-$request->type = $_SERVER['REQUEST_METHOD'];
+try {
 
-$data = [
-	'success' => true,
-	'request' => $request,
-	'data' => 'sdhjdsdshj',
-];
-header('Content-Type: application/json');
-die(json_encode($data));
+	$request = (object)[];
+	$request->type = $_SERVER['REQUEST_METHOD'];
+	$request->data = (object)($_POST ? $_POST : $_GET);
+	if(empty($request->data)) throw new Exception('request is empty.');
+
+	$response = (object)[];
+	$response->success = true;
+	$response->request = $request;
+
+	header('Content-Type: application/json');
+	die(json_encode($response));
+
+} catch (Exception $e) {
+    die(json_encode([
+		'success' => false,
+		'error_msg' => $e->getMessage(),
+	]));
+}
