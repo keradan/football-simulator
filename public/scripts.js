@@ -35,8 +35,8 @@ function refresh_league_table () {
 	api_get({target: 'league_table'}, function(response){
 		console.log('response: ', response);
 		
-		table.querySelector('thead').innerHTML = response.league_table.head;
-		table.querySelector('tbody').innerHTML = response.league_table.body;
+		table.querySelector('thead').innerHTML = response.data.table_head;
+		table.querySelector('tbody').innerHTML = response.data.table_body;
 
 		table.classList.toggle('loading', false);
 	})
@@ -47,7 +47,7 @@ function refresh_league_weeks () {
 	api_get({target: 'weeks'}, function(response) {
 		console.log('response: ', response);
 
-		document.querySelector('.league-week-list').innerHTML = response.league_weeks_list;
+		document.querySelector('.league-week-list').innerHTML = response.data.league_weeks_list;
 		listen_goals_edits();
 	});
 }
@@ -57,7 +57,7 @@ function play_next_week () {
 	api_get({target: 'weeks', week_id: number_of_week}, function(response) {
 		console.log('response: ', response);
 
-		document.querySelector('.league-week-list').innerHTML += response.league_weeks_item;
+		document.querySelector('.league-week-list').innerHTML += response.data.league_weeks_item;
 		listen_goals_edits();
 
 		number_of_week++;

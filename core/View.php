@@ -3,7 +3,7 @@
 namespace Core;
 
 /**
- * 
+ * Class for rendering HTML code
  */
 class View
 {

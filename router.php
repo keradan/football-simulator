@@ -1,7 +1,8 @@
 <?php
 
-$router->GET['league_table'] = function($request, $response) { // LeagueTableController@show
-	$league_table_head_columns = [
+// get data for ligue table with all ligue results and scorings etc
+$router->get('league_table', function($request, $response) {
+	$league_table_head_columns_data = [
 		(object)['title' => 'POS', 'description' => 'Position'],
 		(object)['title' => 'Team', 'description' => 'Team'],
 		(object)['title' => 'PTS', 'description' => 'Points'],
@@ -13,7 +14,7 @@ $router->GET['league_table'] = function($request, $response) { // LeagueTableCon
 		(object)['title' => 'PDC', 'description' => 'Predictions of Championship'],
 	];
 
-	$league_table_body_teams = [
+	$league_table_body_teams_data = [
 		(object)[
 			'POS' => '1',
 			'Team' => 'Leicester City',
@@ -60,19 +61,19 @@ $router->GET['league_table'] = function($request, $response) { // LeagueTableCon
 		],
 	];
 
-	$response->league_table = (object)[
-		'head' => $response->view->render('league-table-head', [
-			'columns' => $league_table_head_columns,
-		]),
-		'body' => $response->view->render('league-table-body', [
-			'teams' => $league_table_body_teams,
-		]),
-	];
+	$table_head = $response->view->render('league-table-head', [
+		'columns' => $league_table_head_columns_data,
+	]);
 
-	return $response;
-};
+	$table_body = $response->view->render('league-table-body', [
+		'teams' => $league_table_body_teams_data,
+	]);
 
-$router->GET['weeks'] = function($request, $response) { // 'LeagueWeeksController@show'
+	return $response->addData('table_head', $table_head)->addData('table_body', $table_body);
+});
+
+// get data about week by id
+$router->get('week', function($request, $response) {
 	$league_weeks = [
 		(object)[
 			'id' => 1,
@@ -133,26 +134,89 @@ $router->GET['weeks'] = function($request, $response) { // 'LeagueWeeksControlle
 		],
 	];
 
-	if (isset($request->data->week_id)) {
-		$response->league_weeks_item = $response->view->render('league-weeks-list', [
-			'league_weeks' => [$league_weeks[$request->data->week_id - 1]],
-		]);
-	} else {
-		$response->league_weeks_list = $response->view->render('league-weeks-list', compact('league_weeks'));
-	}
+	$rendered_weeks_item = $response->view->render('league-weeks-list', [
+		'league_weeks' => [$league_weeks[$request->data->week_id - 1]],
+	]);
+	
+	return $response->addData('league_weeks_item', $rendered_weeks_item);
+});
 
-	return $response;
-};
+// get data about all weeks
+$router->get('weeks', function($request, $response) {
+	$league_weeks = [
+		(object)[
+			'id' => 1,
+			'status' => 'completed',
+			'matches' => [
+				(object)[
+					'owner' => (object)[
+						'name' => 'Tottenham Hotspur',
+						'goals' => 3,
+					],
+					'guest' => (object)[
+						'name' => 'Manchester City',
+						'goals' => 2,
+					],
+				],
+				(object)[
+					'owner' => (object)[
+						'name' => 'Leicester City',
+						'goals' => 1,
+					],
+					'guest' => (object)[
+						'name' => 'Arsenal',
+						'goals' => 4,
+					],
+				],
+			],
+		],
+		(object)[
+			'id' => 2,
+			'status' => 'started',
+			'matches' => [
+				(object)[
+					'owner' => (object)[
+						'name' => 'Tottenham Hotspur',
+						'goals' => 2,
+					],
+					'guest' => (object)[
+						'name' => 'Arsenal',
+						'goals' => 2,
+					],
+				],
+			],
+		],
+		(object)[
+			'id' => 3,
+			'status' => 'not_started',
+			'matches' => [],
+		],
+		(object)[
+			'id' => 4,
+			'status' => 'not_started',
+			'matches' => [],
+		],
+		(object)[
+			'id' => 5,
+			'status' => 'not_started',
+			'matches' => [],
+		],
+	];
 
-$router->POST['weeks'] = function($request, $response) { // 'LeagueWeeksController@replay'
-	$response->in_router = 'POST target - weeks';
-	return $response;
-};
+	$rendered_weeks_list = $response->view->render('league-weeks-list', compact('league_weeks'));
+	
+	return $response->addData('league_weeks_list', $rendered_weeks_list);
+});
 
-$router->POST['goals'] = function($request, $response) { // 'TeamGoalsController@change_team_goals_in_match'
-	$response->in_router = 'POST target - goals';
-	return $response;
-};
+// dsjkkjdsd
+$router->post('weeks', function($request, $response) {
+	$response->addData('in_router', 'POST target - weeks');
+});
+
+// dsjkdskjdjksdjks
+$router->post('goals', function($request, $response) {
+	$response->addData('in_router', 'POST target - goals');
+});
 
 
 

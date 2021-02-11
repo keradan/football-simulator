@@ -2,31 +2,27 @@
 
 require_once 'vendor/autoload.php';
 
-// Request initialization (should use own class)
-$request = (object)[];
-$request->type = $_SERVER['REQUEST_METHOD'];
-$request->data = (object)($_POST ? $_POST : $_GET);
+// Request initialization
+$request = new \Core\Request();
 
-// Response initialization (should use own class)
-$response = (object)[];
-$response->success = true;
-$response->request = $request;
-$response->view = new \Core\View();
+// Response initialization
+$response = new \Core\Response();
 
-// Router Initialization (should use own class)
-$router = (object)["GET" => [], "POST" => []];
-require 'router.php';
+// Router Initialization
+$router = new \Core\Router();
+
+header('Content-Type: application/json');
 
 try {
-	if(empty((array)$request->data)) throw new Exception('request is empty.');
 
-	header('Content-Type: application/json');
-	die(json_encode($router->{$request->type}[$request->data->target]($request, $response)));
+	if($request->isEmpty()) throw new Exception('request is empty.');
+
+	die($router->run($request, $response));
 
 } catch (Exception $e) {
-    die(json_encode([
-		'success' => false,
-		'request' => $request,
-		'error_msg' => $e->getMessage(),
-	]));
+
+	$response->failWithError($e->getMessage());
+
+    die($response);
+    
 }
