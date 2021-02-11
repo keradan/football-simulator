@@ -28,9 +28,14 @@ class Router
 
 	public function run($request, $response)
 	{
-		$response = $this->{$request->method}[$request->data->target]($request, $response);
-		
 		$response->setRequest($request);
+		
+		$current_method_routes = $this->{$request->method};
+
+		if (!isset($current_method_routes[$request->data->target]))
+			throw new \Exception("Route does not exists: " . $request->method . ' - ' . $request->data->target);
+		
+		$response = $current_method_routes[$request->data->target]($request, $response);
 		
 		return $response;
 	}

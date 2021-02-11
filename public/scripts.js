@@ -19,6 +19,8 @@ let api_post = (data, success_function = null) => api_call('post', data, success
 let number_of_week = 1;
 
 // какие мне нужны запросы к апи:
+// api_get({target:'test'})
+// api_post({target:'test'})
 
 // 2 пересчитать неделю по номеру api_post({target:'weeks', week_id: 5})
 

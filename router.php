@@ -1,5 +1,57 @@
 <?php
 
+
+$router->get('all_teams', function($request, $response) {
+	$file_storage = new \Core\FileStorage();
+
+	foreach ($file_storage->getDirFileNames('teams') as $team_id) {
+		$all_teams[] = $file_storage->load($team_id, 'teams');
+	}
+
+	return $response->addData('all_teams', $all_teams);
+});
+
+$router->post('test', function($request, $response) {
+	$file_storage = new \Core\FileStorage();
+
+	$teams = [
+		(object)[
+			'id' => 1,
+			'name' => 'Manchester City',
+			'spi' => 93.8,
+			'offensive' => 2.9,
+			'defensive' => 0.2,
+		],
+		(object)[
+			'id' => 2,
+			'name' => 'West Ham',
+			'spi' => 76.0,
+			'offensive' => 2.0,
+			'defensive' => 0.7,
+		],
+		(object)[
+			'id' => 3,
+			'name' => 'Newcastle',
+			'spi' => 62.8,
+			'offensive' => 1.7,
+			'defensive' => 0.9,
+		],
+		(object)[
+			'id' => 4,
+			'name' => 'Leicester City',
+			'spi' => 80.0,
+			'offensive' => 2.1,
+			'defensive' => 0.5,
+		],
+	];
+
+	foreach ($teams as $team) {
+		$results[$team->id] = $file_storage->store($team, $team->id, 'teams');
+	}
+
+	return $response->addData('results', $results);
+});
+
 // get data for ligue table with all ligue results and scorings etc
 $router->get('league_table', function($request, $response) {
 	$league_table_head_columns_data = [
@@ -204,7 +256,7 @@ $router->get('weeks', function($request, $response) {
 	];
 
 	$rendered_weeks_list = $response->view->render('league-weeks-list', compact('league_weeks'));
-	
+
 	return $response->addData('league_weeks_list', $rendered_weeks_list);
 });
 

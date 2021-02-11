@@ -1,0 +1,30 @@
+$teams = [
+	(object)[
+		'id' => 1,
+		'name' => 'Manchester City',
+		'spi' => 93.8,
+		'offensive' => 2.9,
+		'defensive' => 0.2,
+	],
+	(object)[
+		'id' => 2,
+		'name' => 'West Ham',
+		'spi' => 76.0,
+		'offensive' => 2.0,
+		'defensive' => 0.7,
+	],
+	(object)[
+		'id' => 3,
+		'name' => 'Newcastle',
+		'spi' => 62.8,
+		'offensive' => 1.7,
+		'defensive' => 0.9,
+	],
+	(object)[
+		'id' => 4,
+		'name' => 'Leicester City',
+		'spi' => 80.0,
+		'offensive' => 2.1,
+		'defensive' => 0.5,
+	],
+];
