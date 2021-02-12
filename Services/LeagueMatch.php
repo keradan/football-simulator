@@ -40,30 +40,32 @@ class LeagueMatch
 		$guest_players_count = 11;
 		for ($i = 0; $i < $this->match_rounds; $i++) {
 
+			$goal_ratio_time_modificator = $i > 3 ? 1 : 0;
+
 			$owner_players_count_coef = ($owner_players_count / (11 * 1.5));
 			$guest_players_count_coef = ($guest_players_count / (11 * 1.5));
 
-			$owner_atack = round($owner_players_count_coef * ((0.7 * $this->owner->spi) * (0.5 * $this->owner->offensive) + rand(1, 40) + $this->home_field_advantage));
+			$owner_atack = round($owner_players_count_coef * ((0.5 * $this->owner->spi) * (0.5 * $this->owner->offensive) + rand(1, 40) + $this->home_field_advantage));
 
-			$guest_atack = round($guest_players_count_coef * ((0.7 * $this->guest->spi) * (0.5 * $this->guest->offensive) + rand(1, 40)));
+			$guest_atack = round($guest_players_count_coef * ((0.5 * $this->guest->spi) * (0.5 * $this->guest->offensive) + rand(1, 40)));
 
-			$owner_defense = round($owner_players_count_coef * ((0.7 * $this->owner->spi) - (30 * $this->owner->defensive) + rand(1, 40) + $this->home_field_advantage));
+			$owner_defense = round($owner_players_count_coef * ((0.5 * $this->owner->spi) - (30 * $this->owner->defensive) + rand(1, 40) + $this->home_field_advantage));
 
-			$guest_defense = round($guest_players_count_coef * ((0.7 * $this->guest->spi) - (30 * $this->guest->defensive) + rand(1, 40)));
+			$guest_defense = round($guest_players_count_coef * ((0.5 * $this->guest->spi) - (30 * $this->guest->defensive) + rand(1, 40)));
 
 			$owners_goal_ratio = $owner_atack / $guest_defense;
 			$guest_goal_ratio = $guest_atack / $owner_defense;
 
 			$new_owner_goals = 0;
-			if ($owners_goal_ratio > 4.5) $new_owner_goals = 3;
-			elseif ($owners_goal_ratio > 3.3) $new_owner_goals = 2;
-			elseif ($owners_goal_ratio > 1.8) $new_owner_goals = 1;
+			if ($owners_goal_ratio > 5.3) $new_owner_goals = 3 - $goal_ratio_time_modificator;
+			elseif ($owners_goal_ratio > 3.6) $new_owner_goals = 2 - $goal_ratio_time_modificator;
+			elseif ($owners_goal_ratio > (1.3 + $goal_ratio_time_modificator) ) $new_owner_goals = 1;
 			$this->owner->goals = $this->owner->goals + $new_owner_goals;
 
 			$new_guest_goals = 0;
-			if ($guest_goal_ratio > 4.5) $new_guest_goals = 3;
-			elseif ($guest_goal_ratio > 3.3) $new_guest_goals = 2;
-			elseif ($guest_goal_ratio > 1.8) $new_guest_goals = 1;
+			if ($guest_goal_ratio > 5.3) $new_guest_goals = 3 - $goal_ratio_time_modificator;
+			elseif ($guest_goal_ratio > 3.6) $new_guest_goals = 2 - $goal_ratio_time_modificator;
+			elseif ($guest_goal_ratio > (1.3 + $goal_ratio_time_modificator) ) $new_guest_goals = 1;
 			$this->guest->goals = $this->guest->goals + $new_guest_goals;
 
 			$this->rounds_log[$i] = (object)[

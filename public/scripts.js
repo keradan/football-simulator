@@ -60,7 +60,14 @@ function add_next_week (week_id) {
 	api_get({target: 'week', week_id: week_id}, function(response) {
 		console.log('response: ', response);
 
-		document.querySelector('.league-week-list').innerHTML += response.data.league_weeks_item;
+		let league_week_list = document.querySelector('.league-week-list');
+		let league_week_list_box = document.querySelector('.league-week-list-box');
+		league_week_list.innerHTML += response.data.league_weeks_item;
+
+		$('.league-week-list-box').animate({
+			scrollTop: league_week_list_box.scrollHeight - league_week_list_box.clientHeight
+		}, 300);
+
 		listen_goals_edits();
 
 		get_next_week_id();
@@ -76,6 +83,20 @@ function play_next_week () {
 		refresh_league_table();
 		add_next_week(response.data.week_id);
 	});
+}
+
+function play_all_weeks () {
+	document.querySelector('.next-week-button').style.display = "none";
+	document.querySelector('.all-weeks-button').style.display = "none";
+
+	play_next_week();
+
+	let play_all_weeks_timer_id = setInterval(function() {
+		if (next_week_id > 5) clearInterval(play_all_weeks_timer_id); 
+
+		play_next_week();
+
+	}, 1000);
 }
 
 function listen_goals_edits() {
@@ -96,6 +117,7 @@ function reset_league() {
 		document.querySelector('.league-week-list').innerHTML = '';
 
 		next_week_id = 1;
+		window.location.reload();
 	});
 }
 
@@ -105,8 +127,8 @@ function get_next_week_id() {
 
 		next_week_id = response.data.next_week_id;
 		if(next_week_id > 6) {
-			document.querySelector('.next-week-button').remove();
-			document.querySelector('.all-weeks-button').remove();
+			document.querySelector('.next-week-button').style.display = "none";
+			document.querySelector('.all-weeks-button').style.display = "none";
 		}
 	});
 }
