@@ -20,7 +20,7 @@ let number_of_week = 1;
 
 // какие мне нужны запросы к апи:
 // api_get({target:'test'})
-// api_post({target:'test'})
+// api_post({target:'reset_league'})
 
 // 2 пересчитать неделю по номеру api_post({target:'weeks', week_id: 5})
 
@@ -71,6 +71,19 @@ function listen_goals_edits() {
 		input.addEventListener('change', function() {
 			input.classList.toggle('changed', input.value != input.dataset.oldValue);
 		});
+	});
+}
+
+function reset_league() {
+	api_post({target: 'reset_league'}, function(response) {
+		console.log('response: ', response);
+
+		let table = document.querySelector('table.league-table');
+		table.querySelector('thead').innerHTML = '';
+		table.querySelector('tbody').innerHTML = '';
+		document.querySelector('.league-week-list').innerHTML = '';
+
+		number_of_week = 1;
 	});
 }
 

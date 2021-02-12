@@ -7,19 +7,48 @@ namespace Core;
  */
 class FileStorage
 {
+
+	private static $instance = null;
+
 	private $storage_dir;
 	
-	public function __construct()
-	{
-		$this->storage_dir = $_SERVER["DOCUMENT_ROOT"] . '/storage';
-	}
+	/**
+     * is not allowed to call from outside to prevent from creating multiple instances,
+     */
+    private function __construct()
+    {
+    	$this->storage_dir = $_SERVER["DOCUMENT_ROOT"] . '/storage';
+    }
 
-	public function is_exists(string $name, string $dir = null)
+    /**
+     * prevent the instance from being cloned (which would create a second instance of it)
+     */
+    private function __clone()
+    {
+    }
+
+    /**
+     * prevent from being unserialized (which would create a second instance of it)
+     */
+    private function __wakeup()
+    {
+    }
+
+    public static function getInstance(): FileStorage
+    {
+        if (static::$instance === null) {
+            static::$instance = new static();
+        }
+
+        return static::$instance;
+    }
+
+	public function is_exists(string $name, string $dir = '')
 	{
 		return file_exists($this->get_path($name, $dir));
 	}
 
-	public function store($data, string $name, string $dir = null)
+	public function store($data, string $name, string $dir = '')
 	{
 		$path = $this->get_path($name, $dir);
 
@@ -41,7 +70,7 @@ class FileStorage
 		return array_values(array_diff($files_list, ['..', '.']));
 	}
 
-	public function load(string $name, string $dir = null)
+	public function load(string $name, string $dir = '')
 	{
 		$path = $this->get_path($name, $dir);
 
@@ -52,7 +81,7 @@ class FileStorage
 		return unserialize(bzdecompress($data));
 	}
 
-	public function delete(string $name, string $dir = null)
+	public function delete(string $name, string $dir = '')
 	{
 		$path = $this->get_path($name, $dir);
 

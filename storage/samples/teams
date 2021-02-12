@@ -2,9 +2,9 @@ $teams = [
 	(object)[
 		'id' => 1,
 		'name' => 'Manchester City',
-		'spi' => 93.8,
-		'offensive' => 2.9,
-		'defensive' => 0.2,
+		'spi' => 87.8,
+		'offensive' => 2.4,
+		'defensive' => 0.3,
 	],
 	(object)[
 		'id' => 2,

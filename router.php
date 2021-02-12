@@ -1,26 +1,19 @@
 <?php
 
+use Services\Team;
+use Services\LeagueWeek;
+use Services\LeagueMatch;
+use Core\FileStorage;
 
-$router->get('all_teams', function($request, $response) {
-	$file_storage = new \Core\FileStorage();
-
-	foreach ($file_storage->getDirFileNames('teams') as $team_id) {
-		$all_teams[] = $file_storage->load($team_id, 'teams');
-	}
-
-	return $response->addData('all_teams', $all_teams);
-});
-
-$router->post('test', function($request, $response) {
-	$file_storage = new \Core\FileStorage();
-
+$router->post('all_teams', function($request, $response) {
+	// take from storage/samples/teams
 	$teams = [
 		(object)[
 			'id' => 1,
 			'name' => 'Manchester City',
-			'spi' => 93.8,
-			'offensive' => 2.9,
-			'defensive' => 0.2,
+			'spi' => 87.8,
+			'offensive' => 2.4,
+			'defensive' => 0.3,
 		],
 		(object)[
 			'id' => 2,
@@ -44,12 +37,42 @@ $router->post('test', function($request, $response) {
 			'defensive' => 0.5,
 		],
 	];
-
 	foreach ($teams as $team) {
-		$results[$team->id] = $file_storage->store($team, $team->id, 'teams');
+		FileStorage::getInstance()->store($team, $team->id, 'teams');
+	}
+	return $response->addData('all_teams_stored', true);
+});
+
+$router->get('all_teams', function($request, $response) {
+	$all_teams = array_map(function($team){
+		return [
+			'id' => $team->id,
+			'name' => $team->name,
+		];
+	}, Team::loadAll());
+
+	return $response->addData('all_teams', $all_teams);
+});
+
+$router->get('test', function($request, $response) {
+	
+	$toss_tickets[] = "1-2|3-4";
+	$toss_tickets[] = "1-3|2-4";
+	$toss_tickets[] = "1-4|3-2";
+	$toss_tickets[] = "2-3|4-1";
+	$toss_tickets[] = "2-1|3-1";
+	$toss_tickets[] = "4-2|4-3";
+
+	foreach ($toss_tickets as $toss_ticket) {
+		$tickets = explode('|', $toss_ticket);
+		$match = new LeagueMatch($tickets[0]);
+		$match_results[] = $match->run()->getMatchResults();
+
+		$match = new LeagueMatch($tickets[1]);
+		$match_results[] = $match->run()->getMatchResults();
 	}
 
-	return $response->addData('results', $results);
+	return $response->addData('match_results', $match_results);
 });
 
 // get data for ligue table with all ligue results and scorings etc
@@ -258,6 +281,32 @@ $router->get('weeks', function($request, $response) {
 	$rendered_weeks_list = $response->view->render('league-weeks-list', compact('league_weeks'));
 
 	return $response->addData('league_weeks_list', $rendered_weeks_list);
+});
+
+// play league week byweek_id
+$router->post('week', function($request, $response) {
+	$response->addData('in_router', 'POST target - weeks');
+});
+
+// remove all weeks, refresh toss tickets
+$router->post('reset_league', function($request, $response) {
+	// $all_teams = Team::loadAll();
+
+	// $weeks_count = (count($all_teams) * (count($all_teams) - 1)) / 2;
+
+	$toss_tickets[] = "1-2|3-4";
+	$toss_tickets[] = "1-3|2-4";
+	$toss_tickets[] = "1-4|3-2";
+	$toss_tickets[] = "2-3|4-1";
+	$toss_tickets[] = "2-1|3-1";
+	$toss_tickets[] = "4-2|4-3";
+
+	shuffle($toss_tickets);
+
+	FileStorage::getInstance()->store($toss_tickets, 'toss_tickets');
+	$toss_tickets = FileStorage::getInstance()->load('toss_tickets');
+
+	return $response->addData('toss_tickets', $toss_tickets);
 });
 
 // dsjkkjdsd
