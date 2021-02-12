@@ -87,9 +87,12 @@ $router->post('reset_league', function($request, $response) {
 // });
 
 // dsjkdskjdjksdjks
-// $router->post('goals', function($request, $response) {
-// 	$response->addData('in_router', 'POST target - goals');
-// });
+$router->post('goals', function($request, $response) {	
+	$league_week = new LeagueWeek($request->data->week_id);
+	$league_week->updateGoal($request->data->match_id, $request->data->team, $request->data->goals);
+
+	return $response->addData('ok', 'ok');
+});
 
 
 

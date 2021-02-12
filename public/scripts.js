@@ -133,6 +133,21 @@ function get_next_week_id() {
 	});
 }
 
+function update_goals(team, match_id, week_id) {
+
+	let input = document.querySelector(`table.week-matches[data-week-id="${week_id}"] tr[data-match-id="${match_id}"] input[data-team="${team}"]`);
+	let goals = input.value;
+
+	api_post({target: 'goals', week_id: week_id, match_id: match_id, team: team, goals: goals}, function(response) {
+		console.log('response: ', response);
+
+		input.classList.toggle('changed', false);
+		input.dataset.oldValue = input.value;
+
+		refresh_league_table();
+	});
+}
+
 
 
 get_next_week_id();

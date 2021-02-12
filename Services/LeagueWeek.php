@@ -64,6 +64,24 @@ class LeagueWeek
 		return $this;
 	}
 
+	public function updateGoal($match_id, $team, $goals)
+	{
+		// throw new \Exception("mathes:" . print_r($this->league_week_data->matches[$match_id],1));
+
+		$match = $this->league_week_data->matches[$match_id];
+		$match->{$team}->goals = $goals;
+		$match = LeagueMatch::goalsMath($match);
+		$this->league_week_data->matches[$match_id] = $match;
+
+		// throw new \Exception("match:" . print_r($match,1));
+
+		$this->league_week_data->teams_results[$match->owner->id] = $this->getWeekTeamResult($match->owner, $match->guest);
+		$this->league_week_data->teams_results[$match->guest->id] = $this->getWeekTeamResult($match->guest, $match->owner);
+		
+		$this->save();
+		return $this;
+	}
+
 	public static function storeById($week_id, $week_data)
 	{
 		$operation_result = FileStorage::getInstance()->store($week_data, $week_id, 'weeks');

@@ -85,21 +85,28 @@ class LeagueMatch
 			if (rand(1, 100) > 90) $guest_players_count--;
 		}
 
-		if ($this->owner->goals == $this->guest->goals) {
-			$this->owner->points = 1;
-			$this->guest->points = 1;
+		// return goalsMath($this);
+		return self::goalsMath($this);
+	}
+
+	public static function goalsMath($match)
+	{
+		if ($match->owner->goals == $match->guest->goals) {
+			$match->owner->points = 1;
+			$match->guest->points = 1;
+			$match->winner_team_id = null;
 		}
 
-		if ($this->owner->goals > $this->guest->goals) {
-			$this->winner_team_id = $this->owner->id;
-			$this->owner->points = 3;
+		if ($match->owner->goals > $match->guest->goals) {
+			$match->winner_team_id = $match->owner->id;
+			$match->owner->points = 3;
 		}
-		if ($this->owner->goals < $this->guest->goals) {
-			$this->winner_team_id = $this->guest->id;
-			$this->guest->points = 3;
+		if ($match->owner->goals < $match->guest->goals) {
+			$match->winner_team_id = $match->guest->id;
+			$match->guest->points = 3;
 		}
 
-		return $this;
+		return $match;
 	}
 
 	public function getMatchResults()
@@ -108,11 +115,13 @@ class LeagueMatch
 			'winner_team_id' => $this->winner_team_id,
 			'rounds_log' => $this->rounds_log,
 			'owner' => (object)[
+				'id' => $this->owner->id,
 				'name' => $this->owner->name,
 				'goals' => $this->owner->goals,
 				'points' => $this->owner->points,
 			],
 			'guest' => (object)[
+				'id' => $this->guest->id,
 				'name' => $this->guest->name,
 				'goals' => $this->guest->goals,
 				'points' => $this->guest->points,
