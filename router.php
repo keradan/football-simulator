@@ -6,37 +6,7 @@ use Services\LeagueMatch;
 use Core\FileStorage;
 
 $router->post('all_teams', function($request, $response) {
-	// take from storage/samples/teams
-	$teams = [
-		(object)[
-			'id' => 1,
-			'name' => 'Manchester City',
-			'spi' => 87.8,
-			'offensive' => 2.4,
-			'defensive' => 0.3,
-		],
-		(object)[
-			'id' => 2,
-			'name' => 'West Ham',
-			'spi' => 76.0,
-			'offensive' => 2.0,
-			'defensive' => 0.7,
-		],
-		(object)[
-			'id' => 3,
-			'name' => 'Newcastle',
-			'spi' => 62.8,
-			'offensive' => 1.7,
-			'defensive' => 0.9,
-		],
-		(object)[
-			'id' => 4,
-			'name' => 'Leicester City',
-			'spi' => 80.0,
-			'offensive' => 2.1,
-			'defensive' => 0.5,
-		],
-	];
+	// $teams = []; // take from storage/samples/teams
 	foreach ($teams as $team) {
 		FileStorage::getInstance()->store($team, $team->id, 'teams');
 	}
@@ -283,16 +253,16 @@ $router->get('weeks', function($request, $response) {
 	return $response->addData('league_weeks_list', $rendered_weeks_list);
 });
 
-// play league week byweek_id
+// play league week by week_id
 $router->post('week', function($request, $response) {
-	$response->addData('in_router', 'POST target - weeks');
+
+	$league_week = new LeagueWeek($request->data->week_id);
+	$league_week->run()->save();
+	return $response->addData('league_week', $league_week->toDump());
 });
 
 // remove all weeks, refresh toss tickets
 $router->post('reset_league', function($request, $response) {
-	// $all_teams = Team::loadAll();
-
-	// $weeks_count = (count($all_teams) * (count($all_teams) - 1)) / 2;
 
 	$toss_tickets[] = "1-2|3-4";
 	$toss_tickets[] = "1-3|2-4";
@@ -310,14 +280,14 @@ $router->post('reset_league', function($request, $response) {
 });
 
 // dsjkkjdsd
-$router->post('weeks', function($request, $response) {
-	$response->addData('in_router', 'POST target - weeks');
-});
+// $router->post('weeks', function($request, $response) {
+// 	$response->addData('in_router', 'POST target - weeks');
+// });
 
 // dsjkdskjdjksdjks
-$router->post('goals', function($request, $response) {
-	$response->addData('in_router', 'POST target - goals');
-});
+// $router->post('goals', function($request, $response) {
+// 	$response->addData('in_router', 'POST target - goals');
+// });
 
 
 
