@@ -11,16 +11,21 @@ use Services\Team;
 class LeagueWeek
 {
 
+	private $last_league_week_data;
 	private $league_week_data;
 	
 	public function __construct($week_id)
 	{
+		if (FileStorage::getInstance()->is_exists($week_id - 1, 'weeks'))
+			$this->last_league_week_data = FileStorage::getInstance()->load($week_id - 1, 'weeks');
+
 		if (FileStorage::getInstance()->is_exists($week_id, 'weeks'))
 			$this->league_week_data = FileStorage::getInstance()->load($week_id, 'weeks');
 		else {
 			$this->league_week_data = (object)[];
 			$this->league_week_data->id = $week_id;
 			$this->league_week_data->matches = [];
+			$this->league_week_data->teams_results = [];
 		}
 	}
 
@@ -52,7 +57,6 @@ class LeagueWeek
 
 	public function run()
 	{
-	
 		$toss_ticket = FileStorage::getInstance()->load('toss_tickets')[$this->id];
 
 		foreach (explode('|', $toss_ticket) as $match_toss_ticket) {
@@ -60,7 +64,27 @@ class LeagueWeek
 			$matches[] = $match->run()->getMatchResults();
 		}
 		$this->matches = $matches;
+
+		foreach ($matches as $match) {
+			$this->teams_results[$match->owner->id] = $this->getTeamResult($match->owner, $match->guest);
+			$this->teams_results[$match->guest->id] = $this->getTeamResult($match->guest, $match->owner);
+		}
+
 		return $this;
+	}
+
+	private function getWeekTeamResult($team, $rival_team)
+	{
+		$team_result = (object)[
+			'team_id' => $team->id,
+			'name' => $team->name,
+			'pts' => $team->points,
+			'pld' => $this->id,
+			'w' => (int)($team->points == 3),
+			'd' => (int)($team->points == 1),
+			'l' => (int)($team->points == 0),
+			'gd' => $team->goals - $rival_team->goals,
+		];
 	}
 
 	public function toDump()
