@@ -4,6 +4,7 @@ namespace Services;
 
 use Core\FileStorage;
 use Services\Team;
+use Services\LeagueTable;
 
 /**
  * 
@@ -29,12 +30,27 @@ class LeagueWeek
 		}
 	}
 
+	public static function deleteAll()
+	{
+		foreach (FileStorage::getInstance()->getDirFileNames('weeks') as $week_id) {
+			if (FileStorage::getInstance()->is_exists($week_id, 'weeks'))
+				$is_deleted[$week_id] = FileStorage::getInstance()->delete($week_id, 'weeks');
+		}
+		return $is_deleted ?? null;
+	}
+
+	public static function nextWeekId()
+	{
+		$weeks_ids = FileStorage::getInstance()->getDirFileNames('weeks');
+		return max(array_merge($weeks_ids, [0])) + 1;
+	}
+
 	public static function loadAll()
 	{
 		foreach (FileStorage::getInstance()->getDirFileNames('weeks') as $week_id) {
-			$all_teams[] = new static($week_id);
+			$all_weeks[] = new static($week_id);
 		}
-		return $all_teams;
+		return $all_weeks ?? [];
 	}
 
 	public static function loadById($week_id)
@@ -57,33 +73,37 @@ class LeagueWeek
 
 	public function run()
 	{
-		$toss_ticket = FileStorage::getInstance()->load('toss_tickets')[$this->id];
+		if ($this->id > 6) return null;
+		$week_match_toss_tickets = explode('|', FileStorage::getInstance()->load('toss_tickets')[$this->id - 1]);
 
-		foreach (explode('|', $toss_ticket) as $match_toss_ticket) {
+		foreach ($week_match_toss_tickets as $match_toss_ticket) {
 			$match = new LeagueMatch($match_toss_ticket);
 			$matches[] = $match->run()->getMatchResults();
+
+			$this->league_week_data->teams_results[$match->owner->id] = $this->getWeekTeamResult($match->owner, $match->guest);
+			$this->league_week_data->teams_results[$match->guest->id] = $this->getWeekTeamResult($match->guest, $match->owner);
 		}
+
 		$this->matches = $matches;
 
-		foreach ($matches as $match) {
-			$this->teams_results[$match->owner->id] = $this->getTeamResult($match->owner, $match->guest);
-			$this->teams_results[$match->guest->id] = $this->getTeamResult($match->guest, $match->owner);
-		}
+		$this->save();
+
+		$league_table = new LeagueTable();
 
 		return $this;
 	}
 
 	private function getWeekTeamResult($team, $rival_team)
 	{
-		$team_result = (object)[
+		return (object)[
 			'team_id' => $team->id,
-			'name' => $team->name,
-			'pts' => $team->points,
-			'pld' => $this->id,
-			'w' => (int)($team->points == 3),
-			'd' => (int)($team->points == 1),
-			'l' => (int)($team->points == 0),
-			'gd' => $team->goals - $rival_team->goals,
+			'Team' => $team->name,
+			'PTS' => $team->points,
+			'PLD' => $this->id,
+			'W' => (int)($team->points == 3),
+			'D' => (int)($team->points == 1),
+			'L' => (int)($team->points == 0),
+			'GD' => $team->goals - $rival_team->goals,
 		];
 	}
 

@@ -1,7 +1,8 @@
-<?php foreach ($teams as $team_columns): ?>
+<?php foreach ($teams as $pos => $team_data): ?>
+	<?php $team_data->POS = $pos + 1 ?>
 	<tr>
-		<?php foreach ($team_columns as $teams_column_title => $teams_column_value): ?>
-			<th data-field="<?= $teams_column_title ?>"><?= $teams_column_value ?></th>
+		<?php foreach ($columns as $column): ?>
+			<th data-field="<?= $column->title ?>"><?= $team_data->{$column->title} ?></th>
 		<?php endforeach; ?>		
 	</tr>
 <?php endforeach; ?>

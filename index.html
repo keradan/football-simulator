@@ -11,7 +11,7 @@
 	<title>Football simulator</title>
 </head>
 <body>
-	<section class="section">
+	<section class="section" style="padding-top: 10px; padding-bottom: 10px;">
 		<div class="container">
 			<h1 class="title" style="text-align: center;">
 				Football simulator
@@ -29,15 +29,13 @@
 			
 			<div class="columns">
 				<div class="column">
-					<button class="button">Play All</button>
+					<button class="button all-weeks-button" onclick="play_all_weeks()">Play All</button>
 				</div>
 				<div class="column" style="text-align: right;">
-					<button class="button">Next Week</button>
+					<button class="button next-week-button" onclick="play_next_week()">Next Week</button>
 				</div>
 			</div>
-			
-			<br>
-			<br>
+
 			<p class="title" style="text-align: center;">Match results</p>
 			<div class="box" style="max-height: 220px; overflow-y: scroll;">
 				<div class="league-week-list">

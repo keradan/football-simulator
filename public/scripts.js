@@ -16,7 +16,7 @@ function api_call(method, data, success_function = null) {
 let api_get = (data, success_function = null) => api_call('get', data, success_function);
 let api_post = (data, success_function = null) => api_call('post', data, success_function);
 
-let number_of_week = 1;
+let next_week_id = 1;
 
 // какие мне нужны запросы к апи:
 // api_get({target:'test'})
@@ -54,15 +54,27 @@ function refresh_league_weeks () {
 	});
 }
 
-// Get only one week, next by "number_of_week" variable, and put it in the end of the weeks list
-function play_next_week () {
-	api_get({target: 'weeks', week_id: number_of_week}, function(response) {
+// Get next week data and put it in the end of the weeks list
+function add_next_week (week_id) {
+	if (next_week_id > 6) return false;
+	api_get({target: 'week', week_id: week_id}, function(response) {
 		console.log('response: ', response);
 
 		document.querySelector('.league-week-list').innerHTML += response.data.league_weeks_item;
 		listen_goals_edits();
 
-		number_of_week++;
+		get_next_week_id();
+	});
+}
+
+// Run next week, by "next_week_id" variable
+function play_next_week () {
+	if (next_week_id > 6) return false;
+	api_post({target: 'week', week_id: next_week_id}, function(response) {
+		console.log('response: ', response);
+
+		refresh_league_table();
+		add_next_week(response.data.week_id);
 	});
 }
 
@@ -83,12 +95,25 @@ function reset_league() {
 		table.querySelector('tbody').innerHTML = '';
 		document.querySelector('.league-week-list').innerHTML = '';
 
-		number_of_week = 1;
+		next_week_id = 1;
+	});
+}
+
+function get_next_week_id() {
+	api_get({target: 'next_week_id'}, function(response) {
+		console.log('response: ', response);
+
+		next_week_id = response.data.next_week_id;
+		if(next_week_id > 6) {
+			document.querySelector('.next-week-button').remove();
+			document.querySelector('.all-weeks-button').remove();
+		}
 	});
 }
 
 
 
+get_next_week_id();
 refresh_league_table();
 refresh_league_weeks();
 

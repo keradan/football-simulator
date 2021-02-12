@@ -1,0 +1,11 @@
+[
+	(object)['title' => 'POS', 'description' => 'Position'],
+	(object)['title' => 'Team', 'description' => 'Team'],
+	(object)['title' => 'PTS', 'description' => 'Points'],
+	(object)['title' => 'PLD', 'description' => 'Played'],
+	(object)['title' => 'W', 'description' => 'Won'],
+	(object)['title' => 'D', 'description' => 'Drawn'],
+	(object)['title' => 'L', 'description' => 'Lost'],
+	(object)['title' => 'GD', 'description' => 'Goal difference'],
+	(object)['title' => 'PDC', 'description' => 'Predictions of Championship'],
+]

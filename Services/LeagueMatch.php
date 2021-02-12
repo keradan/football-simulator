@@ -15,8 +15,8 @@ class LeagueMatch
 
 	private $match_rounds = 4;
 
-	private $owner;
-	private $guest;
+	public $owner;
+	public $guest;
 	
 	private $winner_team_id;
 	private $rounds_log = [];
