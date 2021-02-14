@@ -32,7 +32,7 @@ $router->get('league_table', function($request, $response) {
 		'columns' => $league_table_head_columns_data,
 	]);
 
-	return $response->addData('table_head', $table_head)->addData('table_body', $table_body)->addData('table_body_debug', $league_table_body_teams_data);
+	return $response->addData('table_head', $table_head)->addData('table_body', $table_body);
 });
 
 // get next week id
