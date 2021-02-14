@@ -43,9 +43,12 @@ class LeagueTable
 				'D' => 0,
 				'L' => 0,
 				'GD' => 0,
-				'PDC' => '25%',
+				'numeric_pdc' => 0,
 			];
 		}
+
+		// $common_numeric_pdc = [];
+		// $numbers = (int)0;
 
 		foreach ($weeks_ids as $week_id) {
 			$week = new LeagueWeek($week_id);
@@ -57,11 +60,42 @@ class LeagueTable
 				$team_totals->D = $team_totals->D + $team_week_result->D;
 				$team_totals->L = $team_totals->L + $team_week_result->L;
 				$team_totals->GD = $team_totals->GD + $team_week_result->GD;
-				$team_totals->PDC = '35%';
+				$team_totals->numeric_pdc = max(1, $team_totals->PTS + $team_totals->W - $team_totals->L + ($team_totals->GD));
+				// $team_totals->numeric_pdc = (int)$team_totals->PTS + (int)$team_totals->W - (int)$team_totals->L + (int)$team_totals->GD;
+
+				// $common_numeric_pdc[$team_week_result->team_id][] = $team_totals->PTS;
 
 				$totals[$team_week_result->team_id] = $team_totals;
+
+				// $numbers++;
 			}
 		}
+
+		$common_numeric_pdc = array_reduce($totals, function($carry, $team_totals) {
+			return $carry + $team_totals->numeric_pdc;
+		});
+
+		foreach ($totals as $team_id => &$team_totals) {
+			// tmp
+			$team_totals->common_PDC = $common_numeric_pdc;
+
+			if($common_numeric_pdc <= 0) {
+				$team_totals->PDC = 25;
+			} else $team_totals->PDC = round(($team_totals->numeric_pdc / $common_numeric_pdc) * 100);
+
+		}
+
+		// foreach ($weeks_ids as $week_id) {
+		// 	foreach ($week->teams_results as $team_week_result) {
+		// 		$team_totals = $totals[$team_week_result->team_id];
+				
+		// 		$team_totals->common_PDC = $common_numeric_pdc;
+		// 		// $team_totals->PDC = round($team_totals->PTS / $common_numeric_pdc * 100);
+		// 		// $team_totals->numbers = $numbers;
+
+		// 		$totals[$team_week_result->team_id] = $team_totals;
+		// 	}
+		// }
 
 		usort($totals, function ($a, $b) {
 			return $b->PTS > $a->PTS;
