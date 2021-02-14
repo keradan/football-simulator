@@ -4,8 +4,8 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Services\\": "Services",
-            "Core\\": "Core"
+            "Services\\": "services",
+            "Core\\": "core"
         }
     }
 }
